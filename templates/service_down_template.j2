@@ -1,0 +1,60 @@
+🚨 **服务宕机告警**
+
+📊 **状态**: {{ status.upper() }}
+🔥 **告警数量**: {{ alerts|length }}
+
+---
+
+{% for alert in alerts %}
+{% if alert.status == 'firing' %}🔴{% else %}🟢{% endif %} **服务宕机告警 {{ loop.index }}**
+
+{% if alert.labels %}
+**服务信息:**
+{% for key, value in alert.labels.items() %}
+{% if key == 'instance' %}
+- 🖥️ **服务地址**: {{ value }}
+{% elif key == 'alertname' %}
+- 🚨 **告警名称**: {{ value }}
+{% elif key == 'severity' %}
+- ⚠️ **严重程度**: {{ value }}
+{% elif key == 'job' %}
+- 🔧 **监控任务**: {{ value }}
+{% else %}
+- {{ key }}: {{ value }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if alert.annotations %}
+**故障详情:**
+{% for key, value in alert.annotations.items() %}
+{% if key == 'description' %}
+- 📝 **描述**: {{ value | replace('\n', ' ') }}
+{% elif key == 'summary' %}
+- 📋 **摘要**: {{ value }}
+{% else %}
+- {{ key }}: {{ value }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if alert.startsAt %}
+🕐 **故障开始时间**: {{ alert.startsAt }}
+{% endif %}
+
+{% if alert.endsAt and alert.status == 'resolved' %}
+✅ **恢复时间**: {{ alert.endsAt }}
+{% endif %}
+
+{% if alert.generatorURL %}
+🔗 **监控图表**: {{ alert.generatorURL }}
+{% endif %}
+
+{% if external_url %}
+🔗 **告警管理**: {{ external_url }}
+{% endif %}
+
+---
+{% endfor %}
+
+🚨 **服务已宕机，请立即处理！**

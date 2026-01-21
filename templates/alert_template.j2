@@ -1,0 +1,46 @@
+**Prometheus Alert**
+
+📊 **Status**: {{ status.upper() }}
+🔥 **Alert Count**: {{ alerts|length }}
+
+{% if group_labels %}
+🏷️ **Group Labels**: {{ group_labels|join(', ', attribute='value') }}
+{% endif %}
+
+{% if external_url %}
+🔗 **External URL**: {{ external_url }}
+{% endif %}
+
+---
+
+{% for alert in alerts %}
+{% if alert.status == 'firing' %}🔴{% else %}🟢{% endif %} **Alert {{ loop.index }}: {{ alert.status.upper() }}**
+
+{% if alert.labels %}
+**Labels:**
+{% for key, value in alert.labels.items() %}
+- {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if alert.annotations %}
+**Annotations:**
+{% for key, value in alert.annotations.items() %}
+- {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if alert.startsAt %}
+🕐 **Started**: {{ alert.startsAt }}
+{% endif %}
+
+{% if alert.endsAt and alert.status == 'resolved' %}
+✅ **Resolved**: {{ alert.endsAt }}
+{% endif %}
+
+{% if alert.generatorURL %}
+🔗 **Generator**: {{ alert.generatorURL }}
+{% endif %}
+
+---
+{% endfor %}
