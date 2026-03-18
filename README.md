@@ -21,12 +21,18 @@
 
 ## 🚀 快速开始
 
+### docker
+
+```
+docker run -p 8001:8000 192.168.3.12:5005/prometheus/webhook:v0.01
+```
+
 ### 打包
 
 ```
-make install
+pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 ```
 
-```
-make build-linux
-```
+### 模板
+
+按照[altername]_template.j2  命名，存放到templates目录下

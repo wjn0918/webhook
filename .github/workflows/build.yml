@@ -1,0 +1,54 @@
+name: Build Executable
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write   # ✅ 允许创建 release
+  actions: read
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.10']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install certbot
+      run: |
+        pip install certbot
+
+    - name: Build executable
+      run: |
+        python build.py
+
+    - name: Make executable
+      run: |
+        chmod +x dist/*
+
+    - name: Create GitHub Release and upload assets
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          dist/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    

@@ -1,0 +1,41 @@
+{
+  "receiver": "http-webhook",
+  "status": "firing",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "DMLicenseExpireSoon",
+        "instance": "node-exporter:9100",
+        "job": "node-exporter",
+        "severity": "warning"
+      },
+      "annotations": {
+        "description": "\u5269\u4f59 42 \u5929",
+        "summary": "\u8fbe\u68a6\u6570\u636e\u5e93\u6388\u6743\u5373\u5c06\u5230\u671f"
+      },
+      "startsAt": "2026-03-18T07:13:21.39Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "http://c6b039eb1afb:9090/graph?g0.expr=%28dm_license_expiry_timestamp+-+time%28%29%29+%2F+86400+%3C%3D+90&g0.tab=1",
+      "fingerprint": "e4ff47de9c653185"
+    }
+  ],
+  "groupLabels": {
+    "alertname": "DMLicenseExpireSoon",
+    "instance": "node-exporter:9100"
+  },
+  "commonLabels": {
+    "alertname": "DMLicenseExpireSoon",
+    "instance": "node-exporter:9100",
+    "job": "node-exporter",
+    "severity": "warning"
+  },
+  "commonAnnotations": {
+    "description": "\u5269\u4f59 42 \u5929",
+    "summary": "\u8fbe\u68a6\u6570\u636e\u5e93\u6388\u6743\u5373\u5c06\u5230\u671f"
+  },
+  "externalURL": "http://41c3abdfcefa:9093",
+  "version": "4",
+  "groupKey": "{}/{alertname=~\"^(?:.*)$\"}:{alertname=\"DMLicenseExpireSoon\", instance=\"node-exporter:9100\"}",
+  "truncatedAlerts": 0
+}

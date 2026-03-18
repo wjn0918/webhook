@@ -36,6 +36,12 @@ jinja_env = Environment(
     lstrip_blocks=True
 )
 
+pro_dir = os.path.dirname(__file__)
+template_dir = os.path.join(pro_dir, "templates")
+tems = os.listdir(template_dir)
+
+logger.info(f"Available templates: {tems}")
+
 def generate_dingtalk_signature(secret: str) -> tuple[str, str]:
     """
     Generate DingTalk robot signature for signed security mode
@@ -71,14 +77,18 @@ def select_template(alerts: list) -> str:
     Returns:
         str: Template filename
     """
-    if not alerts:
-        return "alert_template.j2"
-
     # Check the first alert's labels and annotations for keywords
     first_alert = alerts[0]
-    alertname = first_alert.get("labels", {}).get("alertname", "").lower()
+    alertname = first_alert.get("labels", {}).get("alertname", "")
     summary = first_alert.get("annotations", {}).get("summary", "").lower()
     description = first_alert.get("annotations", {}).get("description", "").lower()
+    if not alerts:
+        return "alert_template.j2"
+    
+    if f"{alertname.lower()}_template.j2" in [i.lower() for i in tems]:
+        logger.info(f"Found matching template for alertname: {alertname}")
+        return f"{alertname}_template.j2"
+    
 
     # Certificate expiry alerts
     cert_keywords = ["tls", "证书", "ssl", "certificate", "过期", "expiry", "expir"]
@@ -160,7 +170,7 @@ async def webhook_endpoint(request: Request):
     try:
         # Get request data
         data = await request.json()
-        logger.info(f"Received Alertmanager webhook: {json.dumps(data, indent=2)}")
+        logger.debug(f"Received Alertmanager webhook: {json.dumps(data, indent=2)}")
 
         # Extract alert information
         alerts = data.get("alerts", [])
